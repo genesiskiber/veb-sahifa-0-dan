@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+{% include 'components/_icon.html' %}
+
+  <title> {{ title }} </title>
+
+{% include 'components/_styles.html' %}
+
+{% block style %}
+{% endblock style %}
+</head>
+<body>
+
+{% include 'components/_hero.html' %}
+
+{% block main %}
+
+  <!-- offer section -->
+
+{% include 'components/_offer.html' %}
+
+  <!-- end offer section -->
+
+  <!-- food section -->
+
+{% include 'components/_food.html' %}
+
+  <!-- end food section -->
+
+  <!-- about section -->
+
+{% include 'components/_about.html' %}
+
+  <!-- end about section -->
+
+  <!-- book section -->
+
+{% include 'components/_book.html' %}
+
+  <!-- end book section -->
+
+  <!-- client section -->
+
+{% include 'components/_client.html' %}
+  <!-- end client section -->
+
+  {% endblock main %}
+
+  <!-- footer section -->
+ 
+{% include 'components/_footer.html' %}
+  <!-- footer section -->
+
+  {% block script %}
+  {% endblock script %}
+
+{% include 'components/_scripts.html' %}
+</body>
+
+</html>

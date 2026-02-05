@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container mt-5">
+
+    <h3 class="text-danger">
+        "{{ product.title }}" mahsulotini o‘chirmoqchimisiz?
+    </h3>
+
+    <p>
+        Bu amalni qaytarib bo‘lmaydi!
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <button type="submit" class="btn btn-danger">
+            Ha, o‘chirish
+        </button>
+
+        <a href="{% url 'product_detail' product.pk %}" class="btn btn-secondary">
+            Bekor qilish
+        </a>
+    </form>
+
+</div>
+{% endblock main %}
