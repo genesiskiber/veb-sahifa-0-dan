@@ -3,158 +3,156 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
+
 from .models import HeroSlider, Category, Product
 from .forms import ProductForm
-
 
 def index(request: WSGIRequest):
     sliders = HeroSlider.objects.filter(published=True)
     categories = Category.objects.all()
     products = Product.objects.filter(is_active=True)[:9]
-    context = {
+
+    return render(request, 'index.html', {
         "title": "Alibaba",
         "sliders": sliders,
         "categories": categories,
         "products": products,
-    }
-    return render(request, 'index.html', context)
+    })
 
-def add_product(request:WSGIRequest):
+@login_required(login_url='login')
+@permission_required('main.add_product', raise_exception=True)
+def add_product(request: WSGIRequest):
     if request.method == 'POST':
-        form = ProductForm(data=request.POST, files=request.FILES)
-        print(request.FILES)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            product = form.save()
+            form.save()
+            messages.success(request, "Mahsulot qo‘shildi ✅")
             return redirect('home')
+    else:
+        form = ProductForm()
 
-    form = ProductForm()
-    context = {
-        'form': form
-    }   
-    return render(request, "main/add_product.html", context)
+    return render(request, 'main/add_product.html', {'form': form})
+
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    context = {
-        "product": product
-    }
-    return render(request, "main/detail.html", context)
+    return render(request, 'main/detail.html', {"product": product})
 
+
+@login_required(login_url='login')
+@permission_required('main.change_product', raise_exception=True)
 def update_product(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    
-    if request.method == 'POST':
-        form = ProductForm(data=request.POST, files=request.FILES, instance=product)
-        if form.is_valid():
-            product = form.save()
-            return redirect('product_detail', pk=product.pk)
 
-    form = ProductForm(instance=product)
-    context = {
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Mahsulot yangilandi ✏️")
+            return redirect('product_detail', pk=product.pk)
+    else:
+        form = ProductForm(instance=product)
+
+    return render(request, 'main/update_product.html', {
         "product": product,
         "form": form
-    }
-    return render(request, "main/update_product.html", context)
+    })
 
+
+@login_required(login_url='login')
+@permission_required('main.delete_product', raise_exception=True)
 def delete_product(request, pk):
     product = get_object_or_404(Product, pk=pk)
 
     if request.method == 'POST':
         product.delete()
+        messages.success(request, "Mahsulot o‘chirildi 🗑")
         return redirect('home')
 
     return render(request, 'main/delete_product.html', {
-        'product': product,
-        'title': f"{product.title} ni o'chirish"
+        "product": product
     })
 
 def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        
+
         try:
-            user = User.objects.get(email=email)
-            user = authenticate(request, username=user.username, password=password)
+            user_obj = User.objects.get(email=email)
+            user = authenticate(
+                request,
+                username=user_obj.username,
+                password=password
+            )
             if user is not None:
                 login(request, user)
-                messages.success(request, "Muvaffaqiyatli kirdingiz!")
+                messages.success(request, "Xush kelibsiz 👋")
                 return redirect('home')
             else:
-                messages.error(request, "Email yoki parol noto'g'ri!")
+                messages.error(request, "Parol noto‘g‘ri ❌")
         except User.DoesNotExist:
-            messages.error(request, "Bunday foydalanuvchi topilmadi!")
-    
+            messages.error(request, "Foydalanuvchi topilmadi ❌")
+
     return render(request, 'auth/login.html')
+
 
 def register_view(request):
     if request.method == 'POST':
         full_name = request.POST.get('full_name')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        
+
         if User.objects.filter(email=email).exists():
-            messages.error(request, "Bu email allaqachon ro'yxatdan o'tgan!")
+            messages.error(request, "Bu email band ❌")
             return redirect('login')
-        
+
         username = email.split('@')[0]
-        
-        if User.objects.filter(username=username).exists():
-            counter = 1
-            while User.objects.filter(username=f"{username}{counter}").exists():
-                counter += 1
-            username = f"{username}{counter}"
-        
+        counter = 1
+        base_username = username
+
+        while User.objects.filter(username=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
+
         user = User.objects.create_user(
             username=username,
             email=email,
             password=password
         )
-        
-        name_parts = full_name.split(' ', 1)
-        user.first_name = name_parts[0]
-        user.last_name = name_parts[1] if len(name_parts) > 1 else ''
+
+        parts = full_name.split(' ', 1)
+        user.first_name = parts[0]
+        user.last_name = parts[1] if len(parts) > 1 else ''
         user.save()
-        
-        messages.success(request, "Ro'yxatdan muvaffaqiyatli o'tdingiz!")
+
         login(request, user)
+        messages.success(request, "Ro‘yxatdan o‘tdingiz 🎉")
         return redirect('home')
-    
+
     return redirect('login')
 
+
+@login_required(login_url='login')
 def logout_view(request):
     logout(request)
-    messages.success(request, "Tizimdan chiqdingiz!")
+    messages.success(request, "Tizimdan chiqdingiz 👋")
     return redirect('home')
 
 @login_required(login_url='login')
 def profile_view(request):
     if request.method == 'POST':
-        # Ma'lumotlarni yangilash
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
-        
-        # Email tekshirish
-        if email != request.user.email:
-            if User.objects.filter(email=email).exists():
-                messages.error(request, "Bu email allaqachon ishlatilmoqda!")
-                return redirect('profile')
-        
-        # Ma'lumotlarni saqlash
-        request.user.first_name = first_name
-        request.user.last_name = last_name
-        request.user.email = email
+        request.user.first_name = request.POST.get('first_name')
+        request.user.last_name = request.POST.get('last_name')
+        request.user.email = request.POST.get('email')
         request.user.save()
-        
-        messages.success(request, "Profilingiz muvaffaqiyatli yangilandi!")
+
+        messages.success(request, "Profil yangilandi ✅")
         return redirect('profile')
-    
-    context = {
-        'title': 'My Profile'
-    }
-    return render(request, 'user/profile.html', context)
+
+    return render(request, 'user/profile.html')
+
 
 @login_required(login_url='login')
 def change_password_view(request):
@@ -162,24 +160,20 @@ def change_password_view(request):
         old_password = request.POST.get('old_password')
         new_password = request.POST.get('new_password')
         confirm_password = request.POST.get('confirm_password')
-        
-        # Eski parolni tekshirish
+
         if not request.user.check_password(old_password):
-            messages.error(request, "Eski parol noto'g'ri!")
+            messages.error(request, "Eski parol noto‘g‘ri ❌")
             return redirect('profile')
-        
-        # Yangi parollar bir xilligini tekshirish
+
         if new_password != confirm_password:
-            messages.error(request, "Yangi parollar mos kelmadi!")
+            messages.error(request, "Parollar mos emas ❌")
             return redirect('profile')
-        
-        # Parolni yangilash
+
         request.user.set_password(new_password)
         request.user.save()
-        
-        # Parol o'zgargandan keyin qayta login qilish
         login(request, request.user)
-        messages.success(request, "Parol muvaffaqiyatli o'zgartirildi!")
+
+        messages.success(request, "Parol o‘zgartirildi 🔐")
         return redirect('profile')
-    
+
     return redirect('profile')
