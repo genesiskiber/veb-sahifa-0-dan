@@ -29,7 +29,36 @@
             O‘chirish
         </a>
 
+        <!-- ORDER ADD/REMOVE -->
+        <button class="btn btn-success" id="add-to-order">Mahsulotni qo‘shish</button>
+        <button class="btn btn-secondary" id="remove-from-order">Mahsulotni kamaytirish</button>
+        <span id="order-quantity"></span>
     </div>
+
+<script>
+document.getElementById('add-to-order').onclick = function() {
+    fetch('{% url "add_to_order" product.pk %}', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Accept': 'application/json',
+        },
+    }).then(res => res.json()).then(data => {
+        document.getElementById('order-quantity').innerText = 'Savat: ' + data.quantity;
+    });
+};
+document.getElementById('remove-from-order').onclick = function() {
+    fetch('{% url "remove_from_order" product.pk %}', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Accept': 'application/json',
+        },
+    }).then(res => res.json()).then(data => {
+        document.getElementById('order-quantity').innerText = '';
+    });
+};
+</script>
 
 </div>
 {% endblock main %}

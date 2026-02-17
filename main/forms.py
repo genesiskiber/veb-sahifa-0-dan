@@ -1,5 +1,14 @@
 from django import forms
-from .models import Product
+from .models import Product, TableOrder, ShippingAddress
+class ShippingAddressForm(forms.ModelForm):
+    class Meta:
+        model = ShippingAddress
+        fields = ['address', 'city', 'postal_code', 'country', 'phone']
+
+class TableOrderForm(forms.ModelForm):
+    class Meta:
+        model = TableOrder
+        fields = ['name', 'phone', 'people_count', 'date', 'time', 'note']
 
 class ProductForm(forms.ModelForm):
     class Meta:

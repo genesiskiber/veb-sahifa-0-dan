@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="hero_area">
+    <div class="bg-box">
+        <img src="{% static 'images/hero-bg.jpg' %}" alt="">
+    </div>
+    <header class="header_section">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg custom_nav-container">
+                <a class="navbar-brand" href="{% url 'home' %}"><span>Feane</span></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'menu' %}">Menu</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+                        <li class="nav-item active"><a class="nav-link" href="{% url 'book' %}">Book Table</a></li>
+                    </ul>
+                    <div class="user_option">
+                        <a href="" class="user_link"><i class="fa fa-user" aria-hidden="true"></i></a>
+                        <a class="cart_link" href="#">
+                            <!-- Cart icon SVG -->
+                        </a>
+                        <form class="form-inline">
+                            <button class="btn my-2 my-sm-0 nav_search-btn" type="submit">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                        <a href="" class="order_online">Order Online</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+</div>
+
+<section class="book_section layout_padding">
+    <div class="container">
+        <div class="heading_container">
+            <h2>Book A Table</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form_container">
+                    <form method="POST" action="{% url 'book' %}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="btn_box">
+                            <button type="submit">Book Now</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="map_container">
+                    <div id="googleMap" style="width:100%;height:400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock main %}
+
+{% block script %}
+>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=myMap"></script>
+<script>
+    function myMap() {
+        var mapProp = {
+            center: new google.maps.LatLng(51.508742,-0.120850),
+            zoom: 5,
+        };
+        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+    }
+</script>
+{% endblock script %}

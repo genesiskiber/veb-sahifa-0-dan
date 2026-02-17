@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">To'lov qilish</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 border-end">
+                            <h5 class="mb-3">Yetkazib berish ma'lumotlari</h5>
+                            <form method="POST">
+                                {% csrf_token %}
+                                {% for field in form %}
+                                    <div class="mb-3">
+                                        <label class="form-label">{{ field.label }}</label>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <div class="text-danger small">{{ field.errors|striptags }}</div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                                <button type="submit" class="btn btn-success w-100">To'lovni boshlash</button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Savat</h5>
+                            {% if order and order.items.all %}
+                                <ul class="list-group mb-3">
+                                    {% for item in order.items.all %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>{{ item.product.title }} <span class="badge bg-secondary">x{{ item.quantity }}</span></span>
+                                            <span>{{ item.product.price }} $</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <div class="d-flex justify-content-between fw-bold">
+                                    <span>Jami:</span>
+                                    <span>
+                                        {% with total=0 %}
+                                            {% for item in order.items.all %}
+                                                {% with total=total|add:item.product.price|floatformat:2 %}{% endwith %}
+                                            {% endfor %}
+                                            {{ order.items.all|length|yesno:"" }}
+                                        {% endwith %}
+                                        {{ order.items.all|map:'product.price'|sum }} $
+                                    </span>
+                                </div>
+                            {% else %}
+                                <p class="text-muted">Savat bo'sh.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

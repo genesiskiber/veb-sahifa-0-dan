@@ -1,3 +1,7 @@
+# Stripe keys
+STRIPE_SECRET_KEY = 'sk_test_your_secret_key_here'
+STRIPE_PUBLIC_KEY = 'pk_test_51T1fusRthz7AO1RUTcwjnL81RtrVcT3jHYWGsgKyVNhbVSUq3G8WKIFVcP5jRn3ra3VMZEeVXfitGwbolsYwdwz7006SeUyZlR'
+STRIPE_WEBHOOK_KEY = 'whsec_your_webhook_key_here'
 """
 Django settings for config project.
 
@@ -31,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

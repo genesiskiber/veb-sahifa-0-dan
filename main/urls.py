@@ -1,26 +1,51 @@
 from django.urls import path
 from .views import (
-    index, 
-    add_product, 
-    product_detail, 
-    update_product, 
+    index,
+    about_view,
+    menu_view,
+    book_view,
+    add_product,
+    product_detail,
+    update_product,
     delete_product,
     login_view,
     register_view,
     logout_view,
     profile_view,
-    change_password_view
+    change_password_view,
+    add_to_order,
+    remove_from_order,
+    cart_view,
+    product_search,
+    payment,
+    success,
+    cancel,
+    webhook_view,
 )
 
 urlpatterns = [
     path('', index, name='home'),
+    path('about/', about_view, name='about'),
+    path('menu/', menu_view, name='menu'),
+    path('book/', book_view, name='book'),
+
     path('add/', add_product, name='add_product'),
     path('product/<int:pk>/', product_detail, name='product_detail'),
     path('product/<int:pk>/update/', update_product, name='product_update'),
     path('product/<int:pk>/delete/', delete_product, name='product_delete'),
+
     path('login/', login_view, name='login'),
     path('register/', register_view, name='register'),
     path('logout/', logout_view, name='logout'),
     path('profile/', profile_view, name='profile'),
     path('change-password/', change_password_view, name='change_password'),
+
+    path('order/add/<int:pk>/', add_to_order, name='add_to_order'),
+    path('order/remove/<int:pk>/', remove_from_order, name='remove_from_order'),
+    path('cart/', cart_view, name='cart'),
+    path('search/', product_search, name='product_search'),
+    path('payment/', payment, name='payment'),
+    path('success/', success, name='success'),
+    path('cancel/', cancel, name='cancel'),
+    path('webhook/', webhook_view, name='webhook_view'),
 ]

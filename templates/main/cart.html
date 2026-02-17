@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container mt-4">
+    <h2>Savat</h2>
+    {% if order and order.items.all %}
+        <ul>
+        {% for item in order.items.all %}
+            <li>{{ item.product.title }} x {{ item.quantity }} - {{ item.product.price }} $</li>
+        {% endfor %}
+        </ul>
+        <a href="{% url 'payment' %}" class="btn btn-success">To'lov qilish</a>
+    {% else %}
+        <p>Savat bo'sh.</p>
+    {% endif %}
+</div>
+{% endblock %}

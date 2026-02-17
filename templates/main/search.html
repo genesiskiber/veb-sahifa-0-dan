@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container mt-4">
+    <h2>Mahsulot qidirish</h2>
+    <form method="get" action="{% url 'product_search' %}">
+        <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Mahsulot nomi...">
+        <button type="submit" class="btn btn-primary mt-2">Qidirish</button>
+    </form>
+    <hr>
+    {% if products %}
+        <ul>
+        {% for product in products %}
+            <li>
+                <a href="{% url 'product_detail' product.pk %}">{{ product.title }}</a>
+                - {{ product.price }} $
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Mahsulot topilmadi.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,81 +1,77 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="uz">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
- 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-  <meta name="keywords" content="" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
+  {% include 'components/_icon.html' %}
 
-{% include 'components/_icon.html' %}
+  <title>{{ title|default:"My Site" }}</title>
 
-  <title> {{ title }} </title>
+  {% include 'components/_styles.html' %}
 
-{% include 'components/_styles.html' %}
-
-{% block style %}
-{% endblock style %}
+  {% block style %}{% endblock style %}
 </head>
 <body>
 
-{% include 'components/_hero.html' %}
+
+<!-- 🔔 MESSAGES (HAMMA SAHIFALAR UCHUN) -->
+{% if messages %}
+<div class="container mt-3">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span>&times;</span>
+      </button>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- SEARCH FORM & SAVAT ICON LINK -->
+<div style="position:absolute;top:10px;right:60px;z-index:1000;display:flex;gap:20px;align-items:center;">
+  <form method="get" action="{% url 'product_search' %}" style="display:inline-block;">
+    <input type="text" name="q" placeholder="Qidirish..." style="padding:4px;border-radius:4px;border:1px solid #ccc;">
+    <button type="submit" style="background:#222;color:#fff;border:none;padding:4px 8px;border-radius:4px;">🔍</button>
+  </form>
+  <a href="{% url 'cart' %}" title="Savat">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 18C6.44772 18 6 18.4477 6 19C6 19.5523 6.44772 20 7 20C7.55228 20 8 19.5523 8 19C8 18.4477 7.55228 18 7 18ZM17 18C16.4477 18 16 18.4477 16 19C16 19.5523 16.4477 20 17 20C17.5523 20 18 19.5523 18 19C18 18.4477 17.5523 18 17 18ZM7.2 16H16.8C17.4 16 17.96 15.64 18.22 15.12L21.88 7.59C22.19 6.97 21.73 6.25 21.04 6.25H5.21L4.27 4.36C4.11 4.03 3.77 3.81 3.4 3.81H2C1.45 3.81 1 4.26 1 4.81C1 5.36 1.45 5.81 2 5.81H3.13L6.6 12.59C6.84 13.03 7.29 13.25 7.76 13.25H19C19.55 13.25 20 13.7 20 14.25C20 14.8 19.55 15.25 19 15.25H7.2Z" fill="#fff" stroke="#000" stroke-width="1.5"/>
+    </svg>
+  </a>
+</div>
 
 {% block main %}
 
-  <!-- offer section -->
+  <!-- HERO -->
+  {% include 'components/_hero.html' %}
 
-{% include 'components/_offer.html' %}
+  <!-- OFFER -->
+  {% include 'components/_offer.html' %}
 
-  <!-- end offer section -->
+  <!-- FOOD -->
+  {% include 'components/_food.html' %}
 
-  <!-- food section -->
+  <!-- ABOUT -->
+  {% include 'components/_about.html' %}
 
-{% include 'components/_food.html' %}
+  <!-- BOOK -->
+  {% include 'components/_book.html' %}
 
-  <!-- end food section -->
+  <!-- CLIENT -->
+  {% include 'components/_client.html' %}
 
-  <!-- about section -->
+{% endblock main %}
 
-{% include 'components/_about.html' %}
-
-  <!-- end about section -->
-
-  <!-- book section -->
-
-{% include 'components/_book.html' %}
-
-  <!-- end book section -->
-
-  <!-- client section -->
-
-{% include 'components/_client.html' %}
-  <!-- end client section -->
-
-  {% endblock main %}
-
-  <!-- footer section -->
- 
+<!-- FOOTER -->
 {% include 'components/_footer.html' %}
-  <!-- footer section -->
 
-  {% block script %}
-  {% endblock script %}
+{% block script %}{% endblock script %}
 
 {% include 'components/_scripts.html' %}
 
-{% if messages %}
-  {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-      {{ message }}
-    </div>
-  {% endfor %}
-{% endif %}
-
 </body>
-
 </html>
