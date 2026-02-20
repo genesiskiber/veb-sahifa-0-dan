@@ -1,3 +1,15 @@
+# Add this to register the context processor
+TEMPLATES = [
+    {
+        # ...existing code...
+        'OPTIONS': {
+            'context_processors': [
+                # ...existing context processors...
+                'main.views.cart_order_context',
+            ],
+        },
+    },
+]
 # Stripe keys
 STRIPE_SECRET_KEY = 'sk_test_your_secret_key_here'
 STRIPE_PUBLIC_KEY = 'pk_test_51T1fusRthz7AO1RUTcwjnL81RtrVcT3jHYWGsgKyVNhbVSUq3G8WKIFVcP5jRn3ra3VMZEeVXfitGwbolsYwdwz7006SeUyZlR'

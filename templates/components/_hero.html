@@ -20,16 +20,16 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav  mx-auto ">
               <li class="nav-item active">
-                <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{% url 'main:home' %}">Home <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="menu.html">Menu</a>
+                <a class="nav-link" href="{% url 'main:menu' %}">Menu</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="about.html">About</a>
+                <a class="nav-link" href="{% url 'main:about' %}">About</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="book.html">Book Table</a>
+                <a class="nav-link" href="{% url main:book' %}">Book Table</a>
               </li>
             </ul>
             <div class="user_option">
@@ -41,14 +41,14 @@
                     <span style="margin-left: 5px;">{{ user.first_name|default:user.username }}</span>
                   </a>
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="{% url 'profile' %}">
+                    <a class="dropdown-item" href="{% url 'main:profile' %}">
                       <i class="fa fa-user-circle"></i> Profile
                     </a>
                     <a class="dropdown-item" href="#">
                       <i class="fa fa-shopping-bag"></i> My Orders
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'logout' %}">
+                    <a class="dropdown-item" href="{% url 'main:logout' %}">
                       <i class="fa fa-sign-out"></i> Logout
                     </a>
                   </div>
